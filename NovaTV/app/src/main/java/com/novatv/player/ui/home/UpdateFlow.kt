@@ -5,6 +5,7 @@ import com.novatv.player.AppGraph
 import com.novatv.player.R
 import com.novatv.player.ui.common.TvDialog
 import com.novatv.player.update.Updater
+import com.novatv.player.update.Versions
 import kotlinx.coroutines.launch
 
 /** Dialog flow for app updates from GitHub Releases (Settings → Güncellemeler, daily check on start). */
@@ -39,11 +40,11 @@ object UpdateFlow {
 
     private fun offer(host: MainActivity, r: Updater.Release, silent: Boolean) {
         val size = if (r.size > 0) " (%.1f MB)".format(r.size / 1_048_576.0) else ""
-        val body = host.getString(R.string.update_body, AppGraph.updater.currentVersion, r.version, size) +
+        val body = host.getString(R.string.update_body, AppGraph.updater.currentVersion, Versions.display(r.version), size) +
             if (r.notes.isNotBlank()) "\n\n" + r.notes.trim() else ""
         TvDialog.confirm(
             host,
-            host.getString(R.string.update_title, r.version),
+            host.getString(R.string.update_title, Versions.display(r.version)),
             body,
             host.getString(R.string.update_install),
             host.getString(if (silent) R.string.update_skip else R.string.cancel),

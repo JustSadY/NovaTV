@@ -41,6 +41,18 @@ object Versions {
         return 0
     }
 
+    /** "v1.1.0" -> "1.1.0" for display. */
+    fun display(v: String): String = v.trim().removePrefix("v").removePrefix("V")
+
+    /** GitHub release notes are Markdown; the TV dialog shows them as plain text. */
+    fun plainNotes(md: String): String = md.lines().joinToString("\n") { line ->
+        line.trimEnd()
+            .replace(Regex("^#{1,6}\\s*"), "")
+            .replace(Regex("^(\\s*)[-*]\\s+"), "$1• ")
+            .replace(Regex("\\[([^\\]]+)]\\([^)]+\\)"), "$1")
+            .replace("**", "").replace("__", "").replace("`", "")
+    }.replace(Regex("\n{3,}"), "\n\n").trim()
+
     /** Accepts "owner/name", "github.com/owner/name" or a GitHub URL; returns "owner/name" or null. */
     fun parseRepo(input: String): String? {
         val s = input.trim().removeSuffix("/").removeSuffix(".git")
@@ -105,7 +117,7 @@ class Updater(private val context: Context, private val http: HttpClients, priva
         val apk = apks.firstOrNull { it.optString("name").contains("release", true) } ?: apks.firstOrNull() ?: return null
         return Release(
             version = version,
-            notes = o.optString("body").take(1500),
+            notes = Versions.plainNotes(o.optString("body")).take(1500),
             apkUrl = apk.optString("browser_download_url"),
             apkName = apk.optString("name"),
             size = apk.optLong("size"),

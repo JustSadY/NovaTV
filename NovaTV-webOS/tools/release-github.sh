@@ -3,15 +3,24 @@
 # files, so Homebrew Channel can list, install and update NovaTV from:
 #   https://github.com/OWNER/REPO/releases/latest/download/apps.json
 #
-# Usage: tools/release-github.sh OWNER/REPO [notes-file]
-# Needs: the GitHub CLI (gh auth login), Node.js, Python 3. The version comes from appinfo.json.
-# If the Android release of the same version already exists, the files are added to it.
+# Usage: tools/release-github.sh OWNER/REPO [notes-file] [--tag vX.Y.Z]
+# Needs: the GitHub CLI (gh auth login), Node.js, Python 3. The IPK version comes from appinfo.json.
+# The release is "v<that version>" unless --tag names another (e.g. a newer Android release):
+# the Homebrew link always reads the LATEST release, so every release must carry these files.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-REPO="${1:?usage: tools/release-github.sh OWNER/REPO [notes-file]}"
-NOTES="${2:-}"
+REPO="${1:?usage: tools/release-github.sh OWNER/REPO [notes-file] [--tag vX.Y.Z]}"
+shift
+NOTES=""
+TAG=""
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --tag) TAG="${2:?--tag needs a value}"; shift 2 ;;
+    *) NOTES="$1"; shift ;;
+  esac
+done
 VERSION=$(python3 -c 'import json; print(json.load(open("appinfo.json"))["version"])')
-TAG="v$VERSION"
+TAG="${TAG:-v$VERSION}"
 
 bash tools/build-ipk.sh
 IPK="dist/com.novatv.webos_${VERSION}_all.ipk"

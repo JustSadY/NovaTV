@@ -106,7 +106,12 @@ Depo dosyalarını üretip yayınlamak için (GitHub CLI ile):
 ```bash
 tools/release-github.sh kullanici/novatv
 ```
-Betik IPK'yı derler, `apps.json` ile `com.novatv.webos.manifest.json` dosyalarını üretir (IPK'nın SHA-256 özetiyle) ve hepsini GitHub sürümüne ekler. Aynı sürümde Android APK'sı da varsa dosyalar ona eklenir.
+Betik IPK'yı derler, `apps.json` ile `com.novatv.webos.manifest.json` dosyalarını üretir (IPK'nın SHA-256 özetiyle) ve hepsini GitHub sürümüne ekler.
+
+Homebrew linki her zaman **en son** GitHub sürümünü okur. Bu yüzden yalnızca Android için yeni bir sürüm çıkarıldığında da LG dosyaları `--tag` ile o sürüme eklenmelidir:
+```bash
+tools/release-github.sh kullanici/novatv --tag v1.1.1
+```
 
 **Tarayıcı modu (Yol B) her zaman günceldir:** Uygulama proxy'den açıldığı için proxy klasörü güncellenince TV de güncel sürümü açar.
 

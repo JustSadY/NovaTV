@@ -42,3 +42,5 @@ else
   gh release create "$TAG" -R "$REPO" --title "NovaTV $VERSION" --generate-notes "$APK"
 fi
 echo "Published $APK as $TAG on $REPO"
+echo "LG / Homebrew: the Homebrew link reads the latest release; add the LG files to it too:"
+echo "  ../NovaTV-webOS/tools/release-github.sh $REPO --tag $TAG"

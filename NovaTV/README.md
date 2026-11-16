@@ -122,6 +122,10 @@ keytool -genkeypair -v -keystore novatv-release.jks -alias novatv -keyalg RSA -k
 ```bash
 tools/release-github.sh kullanici/novatv
 ```
+4. LG için Homebrew linki her zaman **en son** sürümü okur. Bu yüzden LG dosyalarını da aynı sürüme ekleyin (LG uygulaması değişmemiş olsa bile):
+```bash
+../NovaTV-webOS/tools/release-github.sh kullanici/novatv --tag v1.1.1
+```
 
 ---
 
@@ -361,7 +365,7 @@ NovaTV/
 
 ## Doğrulama durumu
 
-- `./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease` hatasız tamamlanır (20 birim testi, 0 lint hatası).
+- `./gradlew testDebugUnitTest lintDebug assembleDebug assembleRelease` hatasız tamamlanır (21 birim testi, 0 lint hatası).
 - Uygulama Android TV (1080p) profilli bir **API 36 x86_64 emülatöründe** uçtan uca denendi: kaynak ekleme, canlı HLS, uzantısız MPEG-TS, 404 veren kanal, numara ile kanal açma, kanal paneli ve grup geçişi, hızlı menü, ses parçası, yayın bilgisi, program rehberi, favoriler, arama, taşıma modu, uyku/uyanma, açılışta son kanal, 10.000 kanallık liste.
 - **Android TV 7.1.1 (API 25, `android-tv` x86 resmi sistem imajı, 1,5 GB RAM) emülatöründe** denendi: kurulum ve Leanback başlatıcıda banner, ilk açılışta varsayılan listenin eklenmesi, varsayılan listedeki 13 kanalın tamamının CH+ ile tek tek açılıp görüntü vermesi, numara ile kanal açma, kanal paneli, açılışta son kanalın otomatik oynaması, **cihaz yeniden başlatıldığında NovaTV'nin kendiliğinden açılıp son kanalı oynatması** ve uyku/uyanma. Oynatma sırasında toplam bellek (PSS) ≈ 46 MB.
 - **Telefondan / Ağdan ekle**, Android TV 7.1.1 emülatöründe denendi:
@@ -387,8 +391,12 @@ NovaTV/
 - **Eşitleme** iki yönde denendi:
   - LG (PhantomJS içindeki webOS uygulaması + proxy) → Android TV: kendi kanalı, favori ve kanal adı alındı.
   - Android TV → LG: iki kendi kanalı, ad ve kanal sırası alındı.
-- **Güncelleme denetimi:** Emülatörde GitHub API'ye gidip var olmayan depo için anlaşılır hata gösterdiği denendi. Sürüm karşılaştırma ve depo adı birim testinde.
-  - **İndirme, imza denetimi ve kurulum ekranı henüz denenmedi:** bunun için yayınlanmış bir NovaTV sürümü gerekiyor.
+- **Güncelleme**, Android TV 7.1.1 emülatöründe gerçek GitHub sürümüyle (v1.1.0) baştan sona denendi:
+  - Aynı anahtarla imzalı 1.0.9 test sürümü, açılışta hiçbir ayar yapılmadan varsayılan depodan yeni sürümü buldu.
+  - "İndir ve kur" APK'yı indirdi; paket adı, sürüm ve imza doğrulandı.
+  - Android kurulum ekranı "mevcut uygulamaya güncelleme" olarak açıldı; onaydan sonra 1.1.0 kuruldu.
+  - Var olmayan bir depo için anlaşılır hata mesajı ayrıca denendi.
+  - Farklı anahtarla imzalı bir APK'nın reddedilmesi gerçek cihazda denenmedi; yalnızca kodda var.
 - Gerçek bir telefonla QR okutma ve gerçek TV'de deneme yapılmadı.
 - Testler x86 emülatörlerinde yapıldı; gerçek bir ARM Cortex-A53 televizyonda denenmedi. Uygulamada yerel kod olmadığı için mimari farkı beklenmez, ancak donanım kod çözücü davranışı cihaza göre değişebilir.
 

@@ -58,5 +58,12 @@ class ManageLogicTest {
         assertEquals("kullanici/nova.tv", Versions.parseRepo("github.com/kullanici/nova.tv.git"))
         assertNull(Versions.parseRepo("sadece-isim"))
         assertNull(Versions.parseRepo("a b/c"))
+        assertEquals("1.1.0", Versions.display("v1.1.0"))
+    }
+
+    @Test
+    fun `release notes are shown as plain text`() {
+        val md = "## NovaTV 1.1.0\n\n### İndir\n- **Android TV:** `NovaTV.apk` ([sayfa](https://x.y))\n  * alt madde\n\n\n\nSon satır"
+        assertEquals("NovaTV 1.1.0\n\nİndir\n• Android TV: NovaTV.apk (sayfa)\n  • alt madde\n\nSon satır", Versions.plainNotes(md))
     }
 }
