@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="bg">#FF0A0C11</color>
+    <color name="bg_sidebar">#FF0F1218</color>
+    <color name="surface">#FF171B24</color>
+    <color name="surface_high">#FF202634</color>
+    <color name="surface_selected">#FF1C2A45</color>
+    <color name="divider">#FF262C38</color>
+    <color name="accent">#FF2F80ED</color>
+    <color name="accent_light">#FF6AA8FF</color>
+    <color name="accent_dim">#592F80ED</color>
+    <color name="text_primary">#FFF3F5F9</color>
+    <color name="text_secondary">#FFA6AEBD</color>
+    <color name="text_tertiary">#FF6E7686</color>
+    <color name="text_on_accent">#FFFFFFFF</color>
+    <color name="error">#FFFF5C61</color>
+    <color name="warning">#FFFFB224</color>
+    <color name="success">#FF35C77B</color>
+    <color name="favorite">#FFFFC93C</color>
+    <color name="overlay">#EB0A0C11</color>
+    <color name="overlay_soft">#B30A0C11</color>
+    <color name="scrim_start">#00000000</color>
+    <color name="scrim_end">#F2000000</color>
+    <!-- Light plate: most channel logos are designed for light backgrounds. -->
+    <color name="logo_bg">#FFE6EAF0</color>
+</resources>

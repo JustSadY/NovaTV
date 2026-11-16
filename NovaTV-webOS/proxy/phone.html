@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<!--
+  NovaTV Link — phone page. Served by the NovaTV Android TV app (port 8686) and by the NovaTV
+  LAN proxy (/send). The same file is used in both projects; keep them identical.
+  Protocol: POST /api/sources {key,name,url,epgUrl,m3u} -> {ok,id}; GET /api/status?id&key.
+-->
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NovaTV — Telefondan kaynak ekle</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #0A0C11; color: #F3F5F9; font: 16px/1.45 -apple-system, "Segoe UI", Roboto, Arial, sans-serif; }
+  .wrap { max-width: 560px; margin: 0 auto; padding: 22px 18px 40px; }
+  h1 { font-size: 26px; margin: 0 0 4px; } h1 span { color: #6AA8FF; }
+  .sub { color: #A6AEBD; margin: 0 0 18px; }
+  .card { background: #171B24; border: 1px solid #262C38; border-radius: 16px; padding: 18px; margin-bottom: 16px; }
+  label { display: block; color: #A6AEBD; font-size: 14px; margin: 12px 0 6px; }
+  input[type=text], input[type=url], input[type=tel] { width: 100%; padding: 13px 14px; border-radius: 10px; border: 1px solid #262C38; background: #0F1218; color: #F3F5F9; font-size: 16px; }
+  input:focus { outline: none; border-color: #2F80ED; }
+  .tabs { display: flex; gap: 8px; margin-bottom: 4px; }
+  .tab { flex: 1; padding: 11px; border-radius: 10px; border: 1px solid #262C38; background: #0F1218; color: #A6AEBD; text-align: center; font-weight: 600; }
+  .tab.on { background: #1C2A45; color: #F3F5F9; border-color: #2F80ED; }
+  .file { margin-top: 10px; color: #A6AEBD; font-size: 14px; }
+  button.send { width: 100%; margin-top: 18px; padding: 15px; border: 0; border-radius: 28px; background: #2F80ED; color: #fff; font-size: 17px; font-weight: 700; }
+  button.send:disabled { opacity: .5; }
+  .msg { margin-top: 14px; padding: 12px 14px; border-radius: 10px; display: none; }
+  .msg.info { display: block; background: #1C2A45; } .msg.ok { display: block; background: #12392A; } .msg.err { display: block; background: #3A1A1D; }
+  .legal { color: #6E7686; font-size: 12px; margin-top: 18px; }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Nova<span>TV</span></h1>
+  <p class="sub" id="target">Telefonunuzdan televizyona IPTV kaynağı gönderin.</p>
+
+  <div class="card">
+    <div class="tabs">
+      <div class="tab on" id="tab-url">M3U adresi</div>
+      <div class="tab" id="tab-file">M3U dosyası</div>
+    </div>
+    <label for="name">Liste adı</label>
+    <input type="text" id="name" placeholder="Örn. Ev IPTV" autocomplete="off">
+    <div id="url-box">
+      <label for="url">M3U / M3U8 adresi</label>
+      <input type="url" id="url" placeholder="http://sunucu-adresi/playlist.m3u" autocomplete="off" autocapitalize="off">
+    </div>
+    <div id="file-box" class="hidden">
+      <label for="file">Telefondaki M3U dosyası</label>
+      <input type="file" id="file" accept=".m3u,.m3u8,.txt,audio/x-mpegurl,application/x-mpegurl">
+      <div class="file" id="file-info"></div>
+    </div>
+    <label for="epg">EPG (XMLTV) adresi — isteğe bağlı</label>
+    <input type="url" id="epg" placeholder="http://sunucu-adresi/epg.xml" autocomplete="off" autocapitalize="off">
+    <label for="key">TV ekranındaki PIN</label>
+    <input type="tel" id="key" inputmode="numeric" maxlength="6" placeholder="0000" autocomplete="off">
+    <button class="send" id="send">TV'ye gönder</button>
+    <div class="msg" id="msg"></div>
+  </div>
+  <p class="legal">Yalnızca kullanım hakkına sahip olduğunuz IPTV bağlantılarını ekleyin. Bilgiler yalnızca yerel ağınızdaki televizyona gönderilir.</p>
+</div>
+<script>
+(function () {
+  'use strict';
+  var $ = function (id) { return document.getElementById(id); };
+  var mode = 'url', fileText = null, pollTimer = null;
+  var params = {};
+  location.search.replace(/^\?/, '').split('&').forEach(function (p) {
+    var kv = p.split('='); if (kv[0]) params[decodeURIComponent(kv[0])] = decodeURIComponent((kv[1] || '').replace(/\+/g, ' '));
+  });
+  if (params.k) { $('key').value = params.k; }
+
+  function msg(kind, text) { var m = $('msg'); m.className = 'msg ' + kind; m.textContent = text; }
+
+  function req(method, url, body, cb) {
+    var x = new XMLHttpRequest();
+    x.open(method, url, true);
+    x.setRequestHeader('Content-Type', 'application/json; charset=utf-8');
+    x.onreadystatechange = function () {
+      if (x.readyState !== 4) return;
+      var data = null; try { data = JSON.parse(x.responseText); } catch (e) { /* ignore */ }
+      cb(x.status, data);
+    };
+    x.send(body ? JSON.stringify(body) : null);
+  }
+
+  req('GET', '/api/info', null, function (status, info) {
+    if (status === 200 && info && info.name) $('target').textContent = '“' + info.name + '” cihazına IPTV kaynağı gönderin.';
+  });
+
+  function setMode(m) {
+    mode = m;
+    $('tab-url').className = 'tab' + (m === 'url' ? ' on' : '');
+    $('tab-file').className = 'tab' + (m === 'file' ? ' on' : '');
+    $('url-box').className = m === 'url' ? '' : 'hidden';
+    $('file-box').className = m === 'file' ? '' : 'hidden';
+  }
+  $('tab-url').onclick = function () { setMode('url'); };
+  $('tab-file').onclick = function () { setMode('file'); };
+
+  $('file').onchange = function () {
+    var f = this.files && this.files[0];
+    fileText = null;
+    if (!f) return;
+    if (f.size > 8 * 1024 * 1024) { $('file-info').textContent = 'Dosya çok büyük (en fazla 8 MB).'; return; }
+    var r = new FileReader();
+    r.onload = function () {
+      fileText = String(r.result || '');
+      $('file-info').textContent = f.name + ' • ' + Math.round(f.size / 1024) + ' KB';
+      if (!$('name').value) $('name').value = f.name.replace(/\.[^.]+$/, '');
+    };
+    r.readAsText(f);
+  };
+
+  function poll(id, key) {
+    req('GET', '/api/status?id=' + encodeURIComponent(id) + '&key=' + encodeURIComponent(key), null, function (status, s) {
+      if (status !== 200 || !s) { msg('err', 'Durum alınamadı. TV ekranını kontrol edin.'); $('send').disabled = false; return; }
+      if (s.state === 'done') { msg('ok', '✓ TV\'ye eklendi: ' + s.count + ' kanal. Yeni bir liste gönderebilirsiniz.'); $('send').disabled = false; return; }
+      if (s.state === 'error') { msg('err', 'TV listeyi yükleyemedi: ' + (s.message || 'bilinmeyen hata')); $('send').disabled = false; return; }
+      msg('info', s.state === 'loading' ? 'TV listeyi indiriyor ve işliyor…' : 'TV\'ye gönderildi, bekleniyor…');
+      pollTimer = setTimeout(function () { poll(id, key); }, 1500);
+    });
+  }
+
+  $('send').onclick = function () {
+    var key = $('key').value.replace(/\s+/g, ''), body = { key: key, name: $('name').value.trim(), epgUrl: $('epg').value.trim() };
+    if (pollTimer) clearTimeout(pollTimer);
+    if (!/^\d{4,6}$/.test(key)) { msg('err', 'TV ekranındaki PIN kodunu girin.'); return; }
+    if (mode === 'url') {
+      body.url = $('url').value.trim();
+      if (!/^https?:\/\/.{4,}/i.test(body.url)) { msg('err', 'Geçerli bir http(s) adresi girin.'); return; }
+    } else {
+      if (!fileText) { msg('err', 'Önce bir M3U dosyası seçin.'); return; }
+      body.m3u = fileText;
+    }
+    $('send').disabled = true;
+    msg('info', 'Gönderiliyor…');
+    req('POST', '/api/sources', body, function (status, res) {
+      if (status === 200 && res && res.id) { poll(res.id, key); return; }
+      $('send').disabled = false;
+      msg('err', (res && res.error) || ('Gönderilemedi (HTTP ' + status + ').'));
+    });
+  };
+}());
+</script>
+</body>
+</html>

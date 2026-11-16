@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1280, height=720, user-scalable=no">
+<title>NovaTV</title>
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="app">
+    <!-- Home (base layer): navigation rail + content sections -->
+    <div id="home" class="screen">
+        <div id="sidebar">
+            <div class="brand">Nova<span class="accent">TV</span></div>
+            <div id="clock" class="clock"></div>
+            <div id="nav"></div>
+            <div id="sidebar-footer" class="footer"></div>
+        </div>
+        <div id="content"></div>
+    </div>
+
+    <!-- Fullscreen live player -->
+    <div id="player" class="screen hidden">
+        <video id="video" class="video" preload="none"></video>
+        <div id="player-loading" class="spinner hidden"></div>
+        <div id="player-error" class="error-card hidden">
+            <img class="err-icon" src="assets/icons/error.svg" alt="">
+            <div class="err-title">Yayın açılamadı</div>
+            <div id="err-channel" class="err-channel"></div>
+            <div id="err-message" class="err-message"></div>
+            <div id="err-retry" class="err-retry"></div>
+            <div class="err-hint">OK: tekrar dene • ▲▼ kanal değiştir • ◀ kanal listesi</div>
+        </div>
+        <div id="banner" class="banner hidden">
+            <div class="ib-number" id="ib-number"></div>
+            <div class="logo-plate ib-logo"><img id="ib-logo" alt=""></div>
+            <div class="ib-main">
+                <div class="ib-row">
+                    <span id="ib-name" class="ib-name"></span>
+                    <img id="ib-fav" class="ib-fav hidden" src="assets/icons/star_filled.svg" alt="">
+                    <span id="ib-source" class="badge hidden"></span>
+                    <span id="ib-quality" class="badge badge-accent hidden"></span>
+                </div>
+                <div id="ib-group" class="ib-group"></div>
+                <div id="ib-now" class="ib-now"></div>
+                <div class="progress"><div id="ib-progress" class="progress-bar"></div></div>
+                <div id="ib-next" class="ib-next"></div>
+            </div>
+            <div id="ib-clock" class="ib-clock"></div>
+        </div>
+        <div id="panel" class="panel hidden">
+            <div class="panel-head">
+                <img src="assets/icons/chevron_left.svg" alt="">
+                <span id="panel-group" class="panel-group"></span>
+                <img src="assets/icons/chevron_right.svg" alt="">
+            </div>
+            <div id="panel-count" class="panel-count"></div>
+            <div id="panel-list" class="vlist panel-list"></div>
+            <div id="panel-empty" class="empty hidden">Kanal bulunamadı.</div>
+            <div class="divider"></div>
+            <div id="panel-now" class="panel-now"></div>
+            <div class="progress small"><div id="panel-progress" class="progress-bar"></div></div>
+            <div id="panel-next" class="panel-next"></div>
+            <div class="hint">◀ ▶ grup • OK izle • SARI favori</div>
+        </div>
+        <div id="qmenu" class="qmenu hidden">
+            <div class="qmenu-title">HIZLI MENÜ</div>
+            <div id="qmenu-channel" class="qmenu-channel"></div>
+            <div id="qmenu-items"></div>
+        </div>
+        <div id="number-entry" class="number-entry hidden"></div>
+    </div>
+
+    <div id="layer-root"></div>
+    <div id="osd" class="osd hidden"></div>
+</div>
+
+<!-- ES5 modules, loaded in dependency order (no build step needed) -->
+<script src="js/core/boot-guard.js"></script>
+<script src="js/lib/qrcode.js"></script>
+<script src="js/core/base.js"></script>
+<script src="js/core/storage.js"></script>
+<script src="js/core/settings.js"></script>
+<script src="js/core/http.js"></script>
+<script src="js/data/m3u.js"></script>
+<script src="js/data/builtin.js"></script>
+<script src="js/data/channels.js"></script>
+<script src="js/data/epg.js"></script>
+<script src="js/data/link.js"></script>
+<script src="js/data/manage.js"></script>
+<script src="js/player/hls.js"></script>
+<script src="js/player/player.js"></script>
+<script src="js/input/keys.js"></script>
+<script src="js/ui/widgets.js"></script>
+<script src="js/ui/dialogs.js"></script>
+<script src="js/ui/source-edit.js"></script>
+<script src="js/ui/link-screen.js"></script>
+<script src="js/ui/manage-screen.js"></script>
+<script src="js/ui/sections.js"></script>
+<script src="js/ui/settings-section.js"></script>
+<script src="js/ui/home.js"></script>
+<script src="js/ui/player-ui.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>

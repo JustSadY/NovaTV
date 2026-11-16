@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name" translatable="false">NovaTV</string>
+
+    <!-- Navigation -->
+    <string name="nav_live">Canlı TV</string>
+    <string name="nav_all">Tüm Kanallar</string>
+    <string name="nav_categories">Kategoriler</string>
+    <string name="nav_favorites">Favoriler</string>
+    <string name="nav_recent">Son İzlenenler</string>
+    <string name="nav_sources">IPTV Kaynakları</string>
+    <string name="nav_settings">Ayarlar</string>
+
+    <!-- Common -->
+    <string name="ok">Tamam</string>
+    <string name="cancel">İptal</string>
+    <string name="save">Kaydet</string>
+    <string name="delete">Sil</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="close">Kapat</string>
+    <string name="on">Açık</string>
+    <string name="off">Kapalı</string>
+    <string name="loading">Yükleniyor…</string>
+    <string name="unknown">Bilinmiyor</string>
+    <string name="never">Hiç</string>
+    <string name="group_uncategorized">Diğer</string>
+    <string name="group_all">Tüm Kanallar</string>
+    <string name="group_favorites">Favoriler</string>
+    <string name="channel_count">%d kanal</string>
+    <string name="no_epg">Program bilgisi yok</string>
+    <string name="epg_now">Şimdi</string>
+    <string name="epg_next">Sonra</string>
+    <string name="time_range">%1$s – %2$s</string>
+
+    <!-- Live section -->
+    <string name="live_welcome_title">NovaTV\'ye hoş geldiniz</string>
+    <string name="live_welcome_body">Henüz bir IPTV kaynağı yok. Kendi M3U / M3U8 bağlantınızı veya yerel bir M3U dosyasını ekleyin; resmi TRT ve TBMM TV yayınlarını Ayarlar → “Resmi Türkiye kanallarını ekle” ile geri getirebilirsiniz. Yalnızca kullanım hakkına sahip olduğunuz kaynakları ekleyin.</string>
+    <string name="live_continue">İzlemeye devam et</string>
+    <string name="live_watch">Canlı TV\'yi aç</string>
+    <string name="live_channel_list">Kanal listesi</string>
+    <string name="live_add_source">Kaynak ekle</string>
+    <string name="live_last_channel">Son izlenen kanal</string>
+    <string name="live_stats">%1$d kanal • %2$d kaynak • %3$d kategori</string>
+    <string name="live_loading_channels">Kanallar yükleniyor…</string>
+    <string name="live_remote_help">Kumanda: ▲▼ / CH± kanal değiştir • ◀ kanal listesi • ▶ hızlı menü • OK bilgi • 0–9 kanal numarası</string>
+
+    <!-- Channel lists -->
+    <string name="search_hint">Kanal ara…</string>
+    <string name="filter_source_all">Kaynak: Tümü</string>
+    <string name="filter_source">Kaynak: %s</string>
+    <string name="all_sources">Tüm kaynaklar</string>
+    <string name="empty_channels">Kanal bulunamadı.</string>
+    <string name="empty_favorites">Henüz favori kanal yok.\nBir kanalda MENU tuşuna basın veya OK tuşunu basılı tutun ve “Favorilere ekle”yi seçin.</string>
+    <string name="empty_recent">Henüz kanal izlenmedi.</string>
+    <string name="empty_no_sources">Kanal yok. Önce “IPTV Kaynakları” bölümünden bir kaynak ekleyin.</string>
+    <string name="clear_recents">Listeyi temizle</string>
+    <string name="list_hint_all">OK: izle • MENU / OK basılı tut: seçenekler (favori, sıralama)</string>
+    <string name="list_hint_move">Taşıma modu: ▲▼ ile konumu değiştirin, OK ile kaydedin, GERİ ile iptal edin</string>
+    <string name="categories_hint">Bir kategori seçin</string>
+
+    <!-- Channel options -->
+    <string name="opt_play">İzle</string>
+    <string name="opt_fav_add">Favorilere ekle</string>
+    <string name="opt_fav_remove">Favorilerden çıkar</string>
+    <string name="opt_move">Taşı (yeniden sırala)</string>
+    <string name="opt_move_to_number">Numaraya taşı…</string>
+    <string name="opt_move_up">Yukarı taşı</string>
+    <string name="opt_move_down">Aşağı taşı</string>
+    <string name="opt_info">Kanal bilgisi</string>
+    <string name="opt_clear_broken">“Çalışmıyor” işaretini kaldır</string>
+    <string name="opt_remove_recent">Listeden kaldır</string>
+    <string name="move_needs_no_filter">Sıralamak için arama ve kaynak filtresini kaldırın.</string>
+    <string name="move_to_number_title">Yeni kanal numarası (1–%d)</string>
+    <string name="order_saved">Kanal sırası kaydedildi</string>
+    <string name="fav_added">%s favorilere eklendi</string>
+    <string name="fav_removed">%s favorilerden çıkarıldı</string>
+    <string name="channel_info_body">Numara: %1$d\nKaynak: %2$s\nKategori: %3$s\nEPG kimliği (tvg-id): %4$s\nDurum: %5$s</string>
+    <string name="status_ok">Normal</string>
+    <string name="status_broken">Son denemede açılamadı</string>
+
+    <!-- Sources -->
+    <string name="sources_add">Kaynak ekle</string>
+    <string name="sources_refresh_all">Tümünü yenile</string>
+    <string name="sources_empty">Henüz kaynak yok. “Kaynak ekle” ile M3U bağlantınızı girin.</string>
+    <string name="source_type_url">M3U URL</string>
+    <string name="source_type_file">Yerel dosya</string>
+    <string name="source_status">%1$d kanal • Güncelleme: %2$s</string>
+    <string name="source_disabled">Devre dışı</string>
+    <string name="source_error">Hata: %s</string>
+    <string name="source_opt_edit">Düzenle</string>
+    <string name="source_opt_refresh">Şimdi yenile</string>
+    <string name="source_opt_enable">Etkinleştir</string>
+    <string name="source_opt_disable">Devre dışı bırak</string>
+    <string name="source_opt_show">Bu kaynağın kanallarını göster</string>
+    <string name="source_opt_delete">Kaynağı sil</string>
+    <string name="source_delete_confirm">“%s” kaynağı ve kanalları silinsin mi?</string>
+    <string name="source_refreshing">%s yenileniyor…</string>
+    <string name="source_refreshed">%1$s: %2$d kanal yüklendi</string>
+    <string name="source_refresh_failed">%1$s yenilenemedi: %2$s</string>
+    <string name="sources_refreshing_all">Tüm kaynaklar yenileniyor…</string>
+    <string name="sources_refreshed_all">Kaynaklar yenilendi</string>
+
+    <!-- Source edit -->
+    <string name="source_add_title">IPTV kaynağı ekle</string>
+    <string name="source_edit_title">Kaynağı düzenle</string>
+    <string name="source_name">Kaynak adı</string>
+    <string name="source_name_hint">Örn. Ev IPTV</string>
+    <string name="source_type">Kaynak türü</string>
+    <string name="source_url">M3U / M3U8 adresi</string>
+    <string name="source_url_hint">http://sunucu-adresi/playlist.m3u</string>
+    <string name="source_file">Yerel M3U dosyası</string>
+    <string name="source_file_none">Dosya seçilmedi</string>
+    <string name="source_pick_file">Dosya seç</string>
+    <string name="source_epg">EPG (XMLTV) adresi — isteğe bağlı</string>
+    <string name="source_epg_hint">http://sunucu-adresi/epg.xml.gz</string>
+    <string name="source_ua">User-Agent — isteğe bağlı</string>
+    <string name="source_ua_hint">Boş bırakılırsa genel ayar kullanılır</string>
+    <string name="source_save_load">Kaydet ve yükle</string>
+    <string name="source_legal">NovaTV yalnızca kamu yayıncılarının (TRT, TBMM TV) resmi ve ücretsiz yayınlarını örnek olarak içerir; ücretli veya izinsiz yayın içermez. Yalnızca kullanım hakkına sahip olduğunuz IPTV bağlantılarını ekleyin.</string>
+    <string name="source_builtin_name">Türkiye – Resmi Ücretsiz Yayınlar</string>
+    <string name="source_builtin_desc">Uygulamayla gelir: TRT ve TBMM TV\'nin kendi sunucularındaki resmi, ücretsiz canlı yayınları</string>
+    <string name="source_type_builtin">Dahili</string>
+    <string name="source_custom_name">Kendi kanallarım</string>
+    <string name="source_custom_desc">Telefondaki yönetim panelinden tek tek eklenen kanallar</string>
+    <string name="source_type_custom">Elle</string>
+    <string name="source_err_name">Lütfen bir kaynak adı girin.</string>
+    <string name="source_err_url">Lütfen geçerli bir http(s) adresi girin.</string>
+    <string name="source_err_file">Lütfen bir M3U dosyası seçin.</string>
+    <string name="source_loading">Liste indiriliyor ve işleniyor…</string>
+    <string name="source_load_failed_title">Liste yüklenemedi</string>
+    <string name="source_load_failed_body">%s\n\nKaynak yine de kaydedilsin mi? Daha sonra yenileyebilirsiniz.</string>
+    <string name="source_save_anyway">Yine de kaydet</string>
+    <string name="source_loaded">%d kanal yüklendi</string>
+    <string name="source_picker_title">Dosya seçimi</string>
+    <string name="source_picker_system">Sistem dosya seçici</string>
+    <string name="source_picker_builtin">Dahili dosya tarayıcı (USB / depolama)</string>
+    <string name="source_permission_denied">Depolama izni verilmedi. Dosyaya erişilemiyor.</string>
+    <string name="source_default_name">IPTV Listesi</string>
+
+    <!-- File browser -->
+    <string name="files_title">M3U dosyası seç</string>
+    <string name="files_empty">Bu klasörde M3U dosyası yok.</string>
+    <string name="files_up">.. (üst klasör)</string>
+    <string name="files_roots">Depolama alanları</string>
+    <string name="files_internal">Dahili depolama</string>
+    <string name="files_hint">OK: aç / seç • GERİ: üst klasör</string>
+
+    <!-- Player -->
+    <string name="player_no_channels">Oynatılacak kanal yok. GERİ tuşuyla ana menüye dönüp bir IPTV kaynağı ekleyin.</string>
+    <string name="player_error_title">Yayın açılamadı</string>
+    <string name="player_retrying">Yeniden bağlanılıyor… (%1$d/%2$d)</string>
+    <string name="player_retry_background">Kanal arka planda yeniden denenecek.</string>
+    <string name="player_error_hint">OK: tekrar dene • ▲▼ kanal değiştir • ◀ kanal listesi</string>
+    <string name="player_channel_not_found">%d numaralı kanal bulunamadı</string>
+    <string name="player_video_unsupported">Bu cihaz kanalın video biçimini çözemiyor; yalnızca ses oynatılıyor.</string>
+    <string name="player_audio_unsupported">Bu cihaz kanalın ses biçimini (ör. AC3 / MP2) çözemiyor; ses çalınamıyor.</string>
+    <string name="player_paused">Duraklatıldı</string>
+    <string name="panel_hint">◀ ▶ grup • OK izle • MENU favori</string>
+    <string name="menu_title">Hızlı menü</string>
+    <string name="menu_audio">Ses: %s</string>
+    <string name="menu_subtitles">Altyazı: %s</string>
+    <string name="menu_aspect">Görüntü: %s</string>
+    <string name="menu_channel_list">Kanal listesi</string>
+    <string name="menu_guide">Program rehberi</string>
+    <string name="menu_reload">Yayını yeniden yükle</string>
+    <string name="menu_stream_info">Yayın bilgisi</string>
+    <string name="menu_home">Ana menü</string>
+    <string name="audio_default">Varsayılan</string>
+    <string name="audio_none">Ses parçası yok</string>
+    <string name="audio_title">Ses parçası</string>
+    <string name="subs_title">Altyazı</string>
+    <string name="subs_none">Altyazı yok</string>
+    <string name="track_unknown">Parça %d</string>
+    <string name="guide_title">%s — program rehberi</string>
+    <string name="guide_empty">Bu kanal için EPG verisi yok. Ayarlar veya kaynak düzenleme ekranından bir XMLTV adresi ekleyebilirsiniz.</string>
+    <string name="stream_info_body">Kanal: %1$s\nKaynak: %2$s\nÇözünürlük: %3$s\nVideo: %4$s\nSes: %5$s\nBit hızı: %6$s\nSunucu: %7$s</string>
+
+    <!-- Player errors -->
+    <string name="err_network">Sunucuya bağlanılamadı. İnternet bağlantınızı kontrol edin.</string>
+    <string name="err_timeout">Sunucu zamanında yanıt vermedi.</string>
+    <string name="err_forbidden">Sunucu erişimi reddetti (HTTP %d). Abonelik veya bağlantı süresi dolmuş olabilir.</string>
+    <string name="err_not_found">Yayın bulunamadı (HTTP %d). Kanal kaldırılmış olabilir.</string>
+    <string name="err_server">Yayın sunucusunda hata oluştu (HTTP %d).</string>
+    <string name="err_http">Sunucu beklenmeyen bir yanıt verdi (HTTP %d).</string>
+    <string name="err_format">Yayın biçimi tanınmadı veya desteklenmiyor.</string>
+    <string name="err_decoder">Bu cihaz yayının video/ses biçimini çözemiyor.</string>
+    <string name="err_audio">Ses çıkışı başlatılamadı.</string>
+    <string name="err_drm">Bu yayın şifreli (DRM) ve oynatılamıyor.</string>
+    <string name="err_cleartext">Şifresiz (http) bağlantıya izin verilmedi.</string>
+    <string name="err_generic">Yayın oynatılamadı (%s).</string>
+
+    <!-- Aspect -->
+    <string name="aspect_fit">Sığdır</string>
+    <string name="aspect_fill">Ekranı doldur</string>
+    <string name="aspect_zoom">Yakınlaştır</string>
+
+    <!-- Remote management, hidden channels, updates -->
+    <string name="set_section_remote">Telefondan yönetim</string>
+    <string name="set_remote_open">Telefondan yönet</string>
+    <string name="set_remote_open_summary">QR kod ve PIN ile telefonu eşleştirin; kaynak ve kanalları telefondan yönetin</string>
+    <string name="set_remote_always">Uzaktan yönetim</string>
+    <string name="set_remote_on_summary">Açık: eşleşmiş telefonlar %s adresinden yönetebilir (NovaTV çalıştığı sürece)</string>
+    <string name="set_remote_on_no_net">Açık: ağ bağlantısı bekleniyor</string>
+    <string name="set_remote_off_summary">Kapalı: telefon yalnızca “Telefondan yönet” ekranı açıkken bağlanabilir</string>
+    <string name="set_remote_devices">Eşleşmiş telefonlar</string>
+    <string name="remote_devices_none">Eşleşmiş telefon yok</string>
+    <string name="remote_devices_reset_confirm">Eşleşmiş tüm telefonların bağlantısı kaldırılsın mı? Telefonların yeniden PIN ile eşleşmesi gerekir.</string>
+    <string name="remote_devices_cleared">Eşleşmeler silindi</string>
+    <string name="set_hidden">Gizlenen kanallar</string>
+    <string name="set_hidden_none">Gizlenen kanal yok</string>
+    <string name="set_hidden_confirm">%d gizli kanal yeniden listeye eklensin mi?</string>
+    <string name="hidden_restored">Gizlenen kanallar geri getirildi</string>
+    <string name="opt_hide_channel">Kanalı gizle</string>
+    <string name="opt_delete_channel">Kanalı sil</string>
+    <string name="hide_confirm">%s listeden gizlensin mi? Ayarlar → Gizlenen kanallar\'dan geri getirebilirsiniz.</string>
+    <string name="delete_channel_confirm">%s “Kendi kanallarım” listesinden silinsin mi?</string>
+    <string name="channel_hidden">%s gizlendi</string>
+    <string name="channel_deleted">%s silindi</string>
+    <string name="set_section_updates">Güncellemeler</string>
+    <string name="set_update_repo">GitHub deposu</string>
+    <string name="set_update_repo_hint">Yeni sürümlerin yayınlandığı herkese açık depo (kullanıcı/depo)</string>
+    <string name="set_update_repo_invalid">Geçersiz depo. Biçim: kullanıcı/depo</string>
+    <string name="set_update_auto">Günde bir kez denetle</string>
+    <string name="set_update_now">Şimdi denetle</string>
+    <string name="set_update_now_summary">Bu sürüm: %1$s • son denetim: %2$s</string>
+    <string name="update_checking">Güncelleme denetleniyor…</string>
+    <string name="update_up_to_date">NovaTV güncel (%s)</string>
+    <string name="update_title">NovaTV %s hazır</string>
+    <string name="update_body">Yüklü sürüm: %1$s\nYeni sürüm: %2$s%3$s\n\nİndirme bitince Android\'in kurulum ekranı açılır; kurulumu kumandayla onaylayın. Listeleriniz ve ayarlarınız korunur.</string>
+    <string name="update_install">İndir ve kur</string>
+    <string name="update_skip">Bu sürümü atla</string>
+    <string name="update_downloading">Güncelleme indiriliyor… %%%d</string>
+    <string name="update_ready">Kurulum ekranı açılıyor…</string>
+    <string name="update_failed_title">Güncelleme kurulamadı</string>
+    <string name="update_permission_title">Kurulum izni gerekli</string>
+    <string name="update_permission_body">Android, NovaTV\'nin uygulama kurmasına sizin izin vermenizi istiyor. Açılan ekranda NovaTV için “Bu kaynaktan izin ver”i açın, sonra güncellemeyi yeniden başlatın.</string>
+    <string name="update_open_settings">Ayarları aç</string>
+    <string name="update_no_settings">Bu TV\'de izin ekranı bulunamadı. Ayarlar → Güvenlik → Bilinmeyen kaynaklar\'ı açın.</string>
+
+    <!-- Settings -->
+    <string name="set_section_playback">Oynatma</string>
+    <string name="set_section_startup">Açılış</string>
+    <string name="set_section_data">Kaynaklar ve EPG</string>
+    <string name="set_section_maintenance">Bakım</string>
+    <string name="set_autoplay">Açılışta son kanalı oynat</string>
+    <string name="set_autostart">TV açılınca NovaTV\'yi başlat</string>
+    <string name="set_autostart_help">Otomatik başlatma hakkında</string>
+    <string name="set_updown">Yukarı / Aşağı tuşları</string>
+    <string name="set_updown_normal">Yukarı = sonraki kanal</string>
+    <string name="set_updown_inverted">Yukarı = önceki kanal</string>
+    <string name="set_ch_up_key">CH+ tuşunu öğret</string>
+    <string name="set_ch_down_key">CH− tuşunu öğret</string>
+    <string name="set_ch_key_default">Varsayılan</string>
+    <string name="set_ch_key_hint">Kumandanın kanal tuşları kanal değiştirmiyorsa tuşları buradan tanıtın</string>
+    <string name="key_ch_up">CH+ (kanal yukarı)</string>
+    <string name="key_ch_down">CH− (kanal aşağı)</string>
+    <string name="key_scan_code">tarama kodu %d</string>
+    <string name="teach_title">%s tuşu</string>
+    <string name="teach_body">Kumandada %s tuşuna şimdi basın.\n\nBastığınız hâlde bu pencere kapanmıyorsa TV bu tuşu uygulamalara iletmiyor demektir; o durumda kanal değiştirmek için ▲/▼ tuşlarını kullanın.\n\nYön tuşları, OK, GERİ, ses ve rakam tuşları öğretilemez.</string>
+    <string name="teach_reset">Varsayılana dön</string>
+    <string name="teach_saved">%1$s tuşu kaydedildi: %2$s</string>
+    <string name="teach_reset_done">%s tuşu varsayılana döndü</string>
+    <string name="set_banner">Kanal bilgi süresi</string>
+    <string name="set_banner_value">%d saniye</string>
+    <string name="set_aspect">Görüntü oranı</string>
+    <string name="set_buffer">Tampon profili</string>
+    <string name="buffer_fast">Hızlı kanal geçişi</string>
+    <string name="buffer_balanced">Dengeli</string>
+    <string name="buffer_stable">Kararlı (yavaş internet)</string>
+    <string name="set_ua">User-Agent</string>
+    <string name="ua_default">Varsayılan (NovaTV)</string>
+    <string name="ua_vlc">VLC</string>
+    <string name="ua_browser">Tarayıcı (Chrome)</string>
+    <string name="ua_custom">Özel…</string>
+    <string name="ua_custom_title">Özel User-Agent</string>
+    <string name="set_auto_refresh">Kaynakları otomatik yenile</string>
+    <string name="auto_refresh_value">Açılışta, %d saatte bir</string>
+    <string name="set_add_builtin">Resmi Türkiye kanallarını ekle</string>
+    <string name="set_add_builtin_present">Ekli</string>
+    <string name="set_add_builtin_done">%d resmi kanal eklendi</string>
+    <string name="set_epg_url">Genel EPG (XMLTV) adresi</string>
+    <string name="set_epg_url_hint">Birden fazla adres için virgül kullanın</string>
+    <string name="set_epg_refresh">EPG\'yi şimdi güncelle</string>
+    <string name="set_epg_status_none">EPG adresi yok (kaynaklardaki url-tvg otomatik kullanılır)</string>
+    <string name="set_epg_status">%1$d kanal için program • %2$s</string>
+    <string name="set_epg_loading">EPG güncelleniyor…</string>
+    <string name="set_epg_error">EPG hatası: %s</string>
+    <string name="set_clear_broken">“Çalışmıyor” işaretlerini temizle</string>
+    <string name="set_reset_order">Kanal sıralamasını sıfırla</string>
+    <string name="set_reset_order_confirm">Özel kanal sıralaması silinip kaynaktaki sıraya dönülsün mü?</string>
+    <string name="set_clear_recents">Son izlenenleri temizle</string>
+    <string name="set_clear_cache">Logo önbelleğini temizle</string>
+    <string name="set_about">Hakkında</string>
+    <string name="set_about_value">NovaTV %1$s • Açık kaynak (MIT) • Media3 %2$s</string>
+    <string name="done">Tamamlandı</string>
+    <string name="boot_status_never">Henüz açılış sinyali alınmadı.</string>
+    <string name="boot_status_ok">Son açılışta otomatik başlatıldı (%s).</string>
+    <string name="boot_status_receiver_only">Açılış sinyali alındı (%s) ancak sistem uygulamanın açılmasına izin vermemiş olabilir.</string>
+    <string name="boot_status_missed">Bu cihaz son açılışta uygulamaya açılış sinyali göndermedi. Üretici otomatik başlatmayı engelliyor olabilir.</string>
+    <string name="autostart_help_title">TV açılınca otomatik başlatma</string>
+    <string name="autostart_help_body">NovaTV, Android\'in standart açılış bildirimini (BOOT_COMPLETED) kullanarak cihaz açıldığında kendini başlatmaya çalışır ve son kanalı oynatır.\n\n• Çoğu televizyon kumandayla kapatıldığında tamamen kapanmaz, bekleme (uyku) moduna geçer. Bu durumda açılış bildirimi gönderilmez; TV uyandığında NovaTV ön plandaysa yayın otomatik olarak yeniden başlar.\n• Bazı üreticiler (ör. bazı Sony, Philips, TCL, Xiaomi modelleri) üçüncü taraf uygulamaların açılışta başlamasını engeller. Bu bir sistem kısıtlamasıdır ve NovaTV bunu aşmaya çalışmaz.\n• Android 10 ve üzeri sürümlerde arka plandan uygulama açılması sistem tarafından kısıtlanır.\n• Kurulumdan sonra uygulamayı en az bir kez elle açmanız gerekir.\n\nÖneri: TV\'nizin ayarlarında “Açılışta başlatılacak uygulama”, “Otomatik başlatma” veya “Giriş/Kaynak” seçeneklerini kontrol edin; bazı modeller NovaTV\'yi açılış uygulaması olarak seçmenize izin verir.\n\nDurum: %s</string>
+    <string name="cache_cleared">Önbellek temizlendi</string>
+    <string name="broken_cleared">İşaretler temizlendi</string>
+    <string name="recents_cleared">Son izlenenler temizlendi</string>
+    <string name="order_reset">Sıralama sıfırlandı</string>
+    <!-- NovaTV Link: add from phone / share with other devices -->
+    <string name="link_title">Telefondan yönet</string>
+    <string name="link_button">Telefondan yönet</string>
+    <string name="link_scan_hint">Telefonunuzun kamerasıyla okutun</string>
+    <string name="link_steps">1. Telefonunuz bu TV ile aynı Wi-Fi ağına bağlı olsun.\n2. QR kodu telefon kamerasıyla okutun ya da adresi telefonun tarayıcısına yazıp PIN\'i girin.\n3. Telefon bu TV\'yi hatırlar. Açılan panelden kaynak ve kanal ekleyip silebilir, kanalları gizleyip yeniden adlandırabilir, numaralarını ve favorileri düzenleyebilirsiniz.</string>
+    <string name="link_address">Adres</string>
+    <string name="link_pin">PIN</string>
+    <string name="link_received">Telefondan yapılanlar</string>
+    <string name="link_waiting">Telefon bekleniyor…</string>
+    <string name="link_hint_screen">Uzaktan yönetim kapalı: bu ekran kapanınca telefon bağlantısı da kapanır. Ekran kapalıyken de yönetmek için Ayarlar → Uzaktan yönetim\'i açın. Bu ekran açıkken LG webOS\'taki NovaTV bu TV\'nin kaynaklarını PIN ile kopyalayabilir. GERİ: kapat</string>
+    <string name="link_hint_always">Uzaktan yönetim açık: eşleşmiş telefonlar NovaTV çalıştığı sürece bu TV\'yi yönetebilir. PIN yalnızca yeni bir telefon eşleştirmek için gerekir. GERİ: kapat</string>
+    <string name="link_no_network">Ağ bağlantısı bulunamadı. TV\'nin Wi-Fi veya kablolu ağa bağlı olduğundan emin olun.</string>
+    <string name="link_no_port">Yerel bağlantı başlatılamadı (8686–8695 portları kullanımda).</string>
+</resources>

@@ -1,0 +1,19 @@
+{
+  "name": "novatv-webos",
+  "version": "1.1.0",
+  "private": true,
+  "description": "NovaTV IPTV player for LG webOS TV 1.x (2014) — ES5, no build step",
+  "license": "MIT",
+  "scripts": {
+    "check": "node tools/check-es5.js",
+    "test": "node tests/run-tests.js",
+    "package": "bash tools/build-ipk.sh",
+    "proxy": "python3 proxy/novatv_proxy.py",
+    "install-tv": "ares-install --device tv dist/com.novatv.webos_1.1.0_all.ipk",
+    "launch-tv": "ares-launch --device tv com.novatv.webos"
+  },
+  "devDependencies": {
+    "@webos-tools/cli": "3.2.6",
+    "acorn": "8.19.0"
+  }
+}

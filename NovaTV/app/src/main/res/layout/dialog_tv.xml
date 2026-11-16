@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="560dp"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_dialog"
+    android:orientation="vertical"
+    android:padding="28dp">
+
+    <TextView
+        android:id="@+id/dlg_title"
+        style="@style/Text.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <ScrollView
+        android:id="@+id/dlg_message_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:focusable="false"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        android:defaultFocusHighlightEnabled="false">
+
+        <TextView
+            android:id="@+id/dlg_message"
+            style="@style/Text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:lineSpacingExtra="4dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="17sp" />
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/dlg_input"
+        style="@style/NovaInput"
+        android:layout_width="match_parent"
+        android:layout_marginTop="16dp"
+        android:importantForAutofill="no"
+        android:imeOptions="actionDone|flagNoExtractUi"
+        android:inputType="text"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/dlg_options_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="14dp"
+        android:scrollbars="vertical"
+        android:visibility="gone"
+        android:focusable="false"
+        android:defaultFocusHighlightEnabled="false">
+
+        <LinearLayout
+            android:id="@+id/dlg_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" />
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/dlg_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="22dp"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:visibility="gone" />
+</LinearLayout>

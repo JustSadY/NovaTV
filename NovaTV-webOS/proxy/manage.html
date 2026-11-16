@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>NovaTV Yönetim</title>
+<!--
+  NovaTV remote management panel (phone / computer browser).
+  Served by the Android TV app (assets/link/manage.html, at "/") and by the NovaTV LAN proxy for
+  LG webOS TVs (proxy/manage.html, at "/manage?tv=<id>"). Both files must stay identical.
+  API: POST /api/manage/pair, GET /api/manage/state, POST /api/manage/cmd, GET /api/manage/export.
+-->
+<style>
+  :root { --bg:#0A0C11; --card:#151A24; --card2:#1C2230; --line:#262D3B; --text:#E8ECF3; --muted:#9AA4B5; --accent:#2F80ED; --accent2:#6AA8FF; --ok:#3DBE7A; --err:#FF6B6B; --warn:#F2B84B; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--bg); color: var(--text); font: 16px/1.45 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+  body { padding: 0 0 80px; }
+  header { position: sticky; top: 0; z-index: 5; background: rgba(10,12,17,.96); border-bottom: 1px solid var(--line); padding: 12px 16px 0; }
+  .brand { font-weight: 700; font-size: 20px; } .brand span { color: var(--accent2); }
+  .dev { color: var(--muted); font-size: 13px; margin-top: 2px; }
+  nav { display: flex; gap: 4px; margin-top: 10px; overflow-x: auto; }
+  nav button { flex: 1 0 auto; background: none; border: 0; border-bottom: 3px solid transparent; color: var(--muted); padding: 10px 8px; font: inherit; font-weight: 600; }
+  nav button.on { color: var(--text); border-color: var(--accent); }
+  main { padding: 14px 16px; max-width: 760px; margin: 0 auto; }
+  h2 { font-size: 17px; margin: 18px 0 8px; } h2:first-child { margin-top: 4px; }
+  .card { background: var(--card); border: 1px solid var(--line); border-radius: 14px; padding: 14px; margin-bottom: 10px; }
+  label { display: block; color: var(--muted); font-size: 13px; margin: 10px 0 4px; }
+  input, select { width: 100%; background: var(--card2); color: var(--text); border: 1px solid var(--line); border-radius: 10px; padding: 11px 12px; font: inherit; }
+  input:focus { outline: 2px solid var(--accent); border-color: transparent; }
+  button.b { background: var(--accent); color: #fff; border: 0; border-radius: 10px; padding: 11px 16px; font: inherit; font-weight: 600; }
+  button.b.ghost { background: var(--card2); color: var(--text); border: 1px solid var(--line); }
+  button.b.danger { background: #3A1D22; color: var(--err); border: 1px solid #5A2A31; }
+  button.b.small { padding: 7px 11px; font-size: 14px; }
+  button.b[disabled] { opacity: .55; }
+  .row-btns { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+  .chips { display: flex; gap: 6px; overflow-x: auto; margin: 10px 0; }
+  .chip { flex: 0 0 auto; background: var(--card2); border: 1px solid var(--line); color: var(--muted); border-radius: 999px; padding: 6px 12px; font: inherit; font-size: 14px; }
+  .chip.on { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .list .item { display: flex; align-items: center; gap: 10px; padding: 10px 4px; border-bottom: 1px solid var(--line); }
+  .num { width: 46px; text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; flex: 0 0 auto; }
+  .main { flex: 1; min-width: 0; }
+  .name { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sub { color: var(--muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .star { background: none; border: 0; font-size: 22px; color: var(--muted); padding: 4px 6px; }
+  .star.on { color: var(--warn); }
+  .badge { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--card2); color: var(--muted); margin-left: 6px; vertical-align: 1px; }
+  .err { color: var(--err); font-size: 14px; } .okc { color: var(--ok); }
+  .muted { color: var(--muted); font-size: 14px; }
+  .more { width: 100%; margin-top: 10px; }
+  #toast { position: fixed; left: 50%; top: 12px; transform: translateX(-50%); max-width: 92%; background: #222A39; border: 1px solid var(--line); border-radius: 12px; padding: 12px 16px; display: none; z-index: 20; box-shadow: 0 8px 30px rgba(0,0,0,.5); }
+  #toast.err { border-color: #5A2A31; color: #FFB3B3; }
+  .sheet-bg { position: fixed; inset: 0; background: rgba(0,0,0,.55); z-index: 10; display: none; }
+  .sheet { position: fixed; left: 0; right: 0; bottom: 0; z-index: 11; background: var(--card); border-radius: 18px 18px 0 0; border-top: 1px solid var(--line); padding: 16px 16px 26px; max-height: 88vh; overflow-y: auto; display: none; max-width: 760px; margin: 0 auto; }
+  .sheet h3 { margin: 0 0 4px; font-size: 18px; }
+  .center { max-width: 420px; margin: 8vh auto 0; text-align: center; }
+  .pin { font-size: 32px; letter-spacing: .4em; text-align: center; }
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">Nova<span>TV</span> <span style="color:var(--muted);font-weight:500;font-size:15px">Yönetim</span></div>
+  <div class="dev" id="dev">Bağlanıyor…</div>
+  <nav id="tabs" class="hide">
+    <button data-tab="channels" class="on">Kanallar</button>
+    <button data-tab="sources">Kaynaklar</button>
+    <button data-tab="add">Ekle</button>
+    <button data-tab="sync">Eşitle</button>
+  </nav>
+</header>
+
+<main>
+  <!-- pairing -->
+  <section id="pair" class="hide">
+    <div class="center card">
+      <h2 style="margin-top:0">TV ile eşleş</h2>
+      <p class="muted" id="pairHint">TV'de <b>Ayarlar → Telefondan yönet</b> ekranını açın ve orada görünen 4 haneli PIN'i girin. Bu telefon bir kez eşleşince hatırlanır.</p>
+      <select id="tvPick" class="hide" style="margin-bottom:10px"></select>
+      <input id="pinIn" class="pin" inputmode="numeric" maxlength="4" autocomplete="one-time-code" placeholder="••••">
+      <div class="row-btns" style="justify-content:center"><button class="b" id="pairBtn">Eşleş</button></div>
+      <div class="err" id="pairErr" style="margin-top:10px"></div>
+    </div>
+  </section>
+
+  <!-- channels -->
+  <section id="tab-channels" class="hide">
+    <input id="q" type="search" placeholder="Kanal ara (ad, grup, numara)">
+    <div class="chips" id="filters">
+      <button class="chip on" data-f="all">Tümü</button>
+      <button class="chip" data-f="fav">Favoriler</button>
+      <button class="chip" data-f="custom">Kendi kanallarım</button>
+      <button class="chip" data-f="hidden">Gizlenenler</button>
+    </div>
+    <div class="muted" id="chCount"></div>
+    <div class="list" id="chList"></div>
+    <button class="b ghost more hide" id="moreBtn">Daha fazla göster</button>
+  </section>
+
+  <!-- sources -->
+  <section id="tab-sources" class="hide">
+    <div id="srcList"></div>
+    <div class="row-btns"><button class="b ghost" id="resetOrder">Kanal sırasını sıfırla</button></div>
+  </section>
+
+  <!-- add -->
+  <section id="tab-add" class="hide">
+    <h2>Liste (M3U) ekle</h2>
+    <div class="card">
+      <label for="aName">Ad (isteğe bağlı)</label><input id="aName" placeholder="Örn. Ev listesi">
+      <label for="aUrl">M3U / M3U8 adresi</label><input id="aUrl" type="url" inputmode="url" placeholder="http://… veya https://…">
+      <label for="aFile">…ya da telefondaki M3U dosyası (en fazla 8 MB)</label><input id="aFile" type="file" accept=".m3u,.m3u8,.txt,audio/x-mpegurl,application/vnd.apple.mpegurl,application/x-mpegurl,text/plain">
+      <label for="aEpg">EPG (XMLTV) adresi — isteğe bağlı</label><input id="aEpg" type="url" inputmode="url" placeholder="http://…/epg.xml.gz">
+      <div class="row-btns"><button class="b" id="aBtn">TV'ye ekle</button></div>
+    </div>
+    <h2>Tek kanal ekle</h2>
+    <div class="card">
+      <p class="muted" style="margin-top:0">Kanal "Kendi kanallarım" listesine eklenir.</p>
+      <label for="cName">Kanal adı</label><input id="cName">
+      <label for="cUrl">Yayın adresi</label><input id="cUrl" type="url" inputmode="url" placeholder="http://…/index.m3u8">
+      <label for="cGroup">Grup (isteğe bağlı)</label><input id="cGroup" placeholder="Örn. Haber">
+      <label for="cLogo">Logo adresi (isteğe bağlı)</label><input id="cLogo" type="url" inputmode="url">
+      <div class="row-btns"><button class="b" id="cBtn">Kanalı ekle</button></div>
+    </div>
+  </section>
+
+  <!-- sync -->
+  <section id="tab-sync" class="hide">
+    <h2>Başka bir NovaTV'den al</h2>
+    <div class="card">
+      <p class="muted" style="margin-top:0">Diğer TV'nin kaynakları, kendi kanalları, favorileri, gizlenen kanalları ve kanal adları bu TV'ye <b>eklenir</b>; bu TV'deki hiçbir şey silinmez. Diğer TV'de "Telefondan yönet" ekranını açıp oradaki adresi ve PIN'i girin. LG TV için NovaTV proxy'sinin adresini girin.</p>
+      <label for="sAddr">Diğer cihazın adresi</label><input id="sAddr" inputmode="url" placeholder="192.168.1.40 veya 192.168.1.40:8686">
+      <div class="row-btns"><button class="b ghost" id="sFind">Bağlan</button></div>
+      <div id="sStep2" class="hide">
+        <select id="sTv" class="hide" style="margin-top:10px"></select>
+        <label for="sPin">Diğer TV'nin ekranındaki PIN</label><input id="sPin" class="pin" inputmode="numeric" maxlength="4">
+        <div class="row-btns"><button class="b" id="sGo">Listeyi al</button></div>
+      </div>
+      <div class="muted" id="sMsg" style="margin-top:10px"></div>
+    </div>
+    <h2>Dosya ile</h2>
+    <div class="card">
+      <p class="muted" style="margin-top:0">Bu TV'nin listelerini telefona kaydedin; başka bir NovaTV'nin panelinden geri yükleyin.</p>
+      <div class="row-btns"><button class="b ghost" id="exportBtn">Dosyaya kaydet</button></div>
+      <label for="importFile">Kaydedilmiş dosyayı bu TV'ye yükle</label><input id="importFile" type="file" accept=".json,application/json">
+    </div>
+  </section>
+</main>
+
+<div class="sheet-bg" id="sheetBg"></div>
+<div class="sheet" id="sheet"></div>
+<div id="toast"></div>
+
+<script>
+(function () {
+  'use strict';
+  var params = new URLSearchParams(location.search);
+  var TV = params.get('tv') || '';                 // set when the LG TV is managed through the proxy
+  var TOKEN_KEY = 'novatv.token.' + (TV || location.host);
+  var token = localStorage.getItem(TOKEN_KEY) || '';
+  var state = null, tab = 'channels', filter = 'all', shown = 150;
+  var $ = function (id) { return document.getElementById(id); };
+
+  // ---------------------------------------------------------------- api
+  function withTv(o) { if (TV) o.tv = TV; return o; }
+  function qs(o) { return Object.keys(o).map(function (k) { return encodeURIComponent(k) + '=' + encodeURIComponent(o[k]); }).join('&'); }
+  async function call(base, method, path, body, query) {
+    var url = base + path + (query ? '?' + qs(query) : '');
+    var res, data;
+    try {
+      res = await fetch(url, method === 'GET' ? { cache: 'no-store' } : { method: method, headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    } catch (e) {
+      throw new Error('Cihaza ulaşılamadı. Telefon ile TV aynı ağda mı?');
+    }
+    try { data = await res.json(); } catch (e) { data = {}; }
+    if (!res.ok || data.ok === false) {
+      var err = new Error(data.error || ('HTTP ' + res.status));
+      err.status = res.status;
+      throw err;
+    }
+    return data;
+  }
+  var api = {
+    state: function () { return call('', 'GET', '/api/manage/state', null, withTv({ token: token })); },
+    cmd: function (op, args) { return call('', 'POST', '/api/manage/cmd', withTv({ token: token, op: op, args: args || {} })); },
+    exportCfg: function () { return call('', 'GET', '/api/manage/export', null, withTv({ token: token })); }
+  };
+
+  // ---------------------------------------------------------------- ui helpers
+  var toastTimer = null;
+  function toast(msg, isErr) {
+    var t = $('toast');
+    t.textContent = msg; t.className = isErr ? 'err' : ''; t.style.display = 'block';
+    clearTimeout(toastTimer); toastTimer = setTimeout(function () { t.style.display = 'none'; }, isErr ? 6000 : 3500);
+  }
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function btn(text, cls, onClick) { var b = el('button', 'b ' + (cls || ''), text); b.onclick = onClick; return b; }
+  function when(ms) { if (!ms) return 'hiç'; var d = new Date(ms); return d.toLocaleDateString('tr-TR') + ' ' + d.toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }); }
+  function norm(s) { return String(s || '').toLocaleLowerCase('tr-TR').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/ı/g, 'i'); }
+
+  /** Runs a command with a busy button; shows the TV's answer and the new state. */
+  async function run(button, op, args, after) {
+    if (button) button.disabled = true;
+    try {
+      var r = await api.cmd(op, args);
+      if (r.state) { state = r.state; render(); }
+      toast(r.message || 'Tamam');
+      if (after) after(r);
+      return r;
+    } catch (e) {
+      if (e.status === 401) { forget(); return null; }
+      toast(e.message, true);
+      return null;
+    } finally {
+      if (button) button.disabled = false;
+    }
+  }
+
+  // ---------------------------------------------------------------- sheet
+  function openSheet(build) {
+    var s = $('sheet'); s.innerHTML = ''; build(s);
+    s.style.display = 'block'; $('sheetBg').style.display = 'block';
+  }
+  function closeSheet() { $('sheet').style.display = 'none'; $('sheetBg').style.display = 'none'; }
+  $('sheetBg').onclick = closeSheet;
+  function field(parent, label, value, type) {
+    var l = el('label', null, label), i = el('input'); i.value = value == null ? '' : value; if (type) i.type = type;
+    parent.appendChild(l); parent.appendChild(i); return i;
+  }
+
+  // ---------------------------------------------------------------- pairing
+  function forget() {
+    token = ''; localStorage.removeItem(TOKEN_KEY); state = null;
+    show('pair'); toast('Eşleşme gerekli: TV\'deki PIN\'i girin.', true);
+  }
+  async function pair(pin) {
+    $('pairErr').textContent = '';
+    if (!/^\d{4}$/.test(pin)) { $('pairErr').textContent = '4 haneli PIN\'i girin.'; return; }
+    var name = (navigator.userAgent.match(/\(([^;)]+)/) || [0, 'Telefon'])[1].slice(0, 40);
+    try {
+      var r = await call('', 'POST', '/api/manage/pair', withTv({ pin: pin, name: name }));
+      token = r.token; localStorage.setItem(TOKEN_KEY, token);
+      await load();
+    } catch (e) { $('pairErr').textContent = e.message; }
+  }
+  $('pairBtn').onclick = function () { pair($('pinIn').value.trim()); };
+  $('pinIn').onkeydown = function (e) { if (e.key === 'Enter') pair(this.value.trim()); };
+
+  // ---------------------------------------------------------------- views
+  function show(which) {
+    $('pair').classList.toggle('hide', which !== 'pair');
+    $('tabs').classList.toggle('hide', which === 'pair');
+    ['channels', 'sources', 'add', 'sync'].forEach(function (t) { $('tab-' + t).classList.toggle('hide', which === 'pair' || t !== tab); });
+  }
+  Array.prototype.forEach.call(document.querySelectorAll('#tabs button'), function (b) {
+    b.onclick = function () {
+      tab = b.getAttribute('data-tab');
+      Array.prototype.forEach.call(document.querySelectorAll('#tabs button'), function (x) { x.classList.toggle('on', x === b); });
+      show('main'); render();
+    };
+  });
+  Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'), function (c) {
+    c.onclick = function () {
+      filter = c.getAttribute('data-f'); shown = 150;
+      Array.prototype.forEach.call(document.querySelectorAll('#filters .chip'), function (x) { x.classList.toggle('on', x === c); });
+      renderChannels();
+    };
+  });
+  $('q').oninput = function () { shown = 150; renderChannels(); };
+  $('moreBtn').onclick = function () { shown += 300; renderChannels(); };
+
+  function render() {
+    if (!state) return;
+    var d = state.device || {};
+    $('dev').textContent = (d.name || 'TV') + ' • NovaTV ' + (d.version || '') + ' • ' + state.channels.length + ' kanal';
+    if (tab === 'channels') renderChannels();
+    if (tab === 'sources') renderSources();
+  }
+
+  function renderChannels() {
+    var list = $('chList'), q = norm($('q').value.trim()), items, i, c, row, total;
+    list.innerHTML = '';
+    if (filter === 'hidden') items = state.hidden;
+    else items = state.channels.filter(function (c) { return filter === 'fav' ? c.favorite : filter === 'custom' ? c.custom : true; });
+    if (q) items = items.filter(function (c) { return norm(c.name).indexOf(q) >= 0 || norm(c.group).indexOf(q) >= 0 || String(c.number) === q; });
+    total = items.length;
+    $('chCount').textContent = total + ' kanal' + (filter === 'hidden' ? ' gizli' : '');
+    for (i = 0; i < Math.min(total, shown); i++) {
+      c = items[i];
+      row = el('div', 'item');
+      row.appendChild(el('div', 'num', filter === 'hidden' ? '–' : c.number));
+      var main = el('div', 'main');
+      var nm = el('div', 'name', c.name);
+      if (c.custom) nm.appendChild(el('span', 'badge', 'kendi'));
+      if (c.renamed) nm.appendChild(el('span', 'badge', 'adı değişti'));
+      main.appendChild(nm);
+      main.appendChild(el('div', 'sub', [c.group, c.sourceName].filter(Boolean).join(' • ')));
+      row.appendChild(main);
+      if (filter === 'hidden') {
+        row.appendChild(btn('Geri getir', 'ghost small', (function (ch) { return function () { run(this, 'channel.restore', { key: ch.key }); }; })(c)));
+      } else {
+        var st = el('button', 'star' + (c.favorite ? ' on' : ''), c.favorite ? '★' : '☆');
+        st.setAttribute('aria-label', 'Favori');
+        st.onclick = (function (ch) { return function (e) { e.stopPropagation(); run(this, 'channel.favorite', { key: ch.key, on: !ch.favorite }); }; })(c);
+        row.appendChild(st);
+        main.onclick = (function (ch) { return function () { editChannel(ch); }; })(c);
+      }
+      list.appendChild(row);
+    }
+    $('moreBtn').classList.toggle('hide', total <= shown);
+    if (!total) list.appendChild(el('p', 'muted', filter === 'hidden' ? 'Gizlenen kanal yok.' : 'Kanal bulunamadı.'));
+  }
+
+  function editChannel(c) {
+    openSheet(function (s) {
+      s.appendChild(el('h3', null, c.number + '. ' + c.name));
+      s.appendChild(el('div', 'muted', [c.group, c.sourceName].filter(Boolean).join(' • ')));
+      var name = field(s, c.custom ? 'Kanal adı' : 'Görünen ad (boş bırakılırsa listedeki ad)', c.renamed || c.custom ? c.name : '');
+      if (!c.custom) name.placeholder = c.name;
+      var url, group, logo;
+      if (c.custom) {
+        url = field(s, 'Yayın adresi', c.url, 'url');
+        group = field(s, 'Grup', c.group);
+        logo = field(s, 'Logo adresi', c.logo, 'url');
+      }
+      var num = field(s, 'Kanal numarası', c.number, 'number');
+      var b = el('div', 'row-btns');
+      b.appendChild(btn('Kaydet', '', async function () {
+        var me = this, n = parseInt(num.value, 10);
+        var args = { key: c.key, name: name.value.trim() };
+        if (c.custom) { args.url = url.value.trim(); args.group = group.value.trim(); args.logo = logo.value.trim(); }
+        var changedName = c.custom ? (args.name !== c.name || args.url !== c.url || args.group !== c.group || args.logo !== (c.logo || '')) : (args.name !== (c.renamed ? c.name : ''));
+        var key = c.key;
+        if (changedName) { var r = await run(me, 'channel.update', args); if (!r) return; if (r.key) key = r.key; }
+        if (n && n !== c.number) { if (!await run(me, 'channel.number', { key: key, number: n })) return; }
+        closeSheet();
+      }));
+      b.appendChild(btn(c.favorite ? '★ Favoriden çıkar' : '☆ Favorilere ekle', 'ghost', function () { run(this, 'channel.favorite', { key: c.key, on: !c.favorite }, closeSheet); }));
+      b.appendChild(btn(c.custom ? 'Kanalı sil' : 'Listeden gizle', 'danger', function () {
+        if (!confirm(c.custom ? c.name + ' silinsin mi?' : c.name + ' gizlensin mi? "Gizlenenler"den geri getirebilirsiniz.')) return;
+        run(this, 'channel.delete', { key: c.key }, closeSheet);
+      }));
+      b.appendChild(btn('Kapat', 'ghost', closeSheet));
+      s.appendChild(b);
+    });
+  }
+
+  function renderSources() {
+    var host = $('srcList'), kinds = { url: 'Adres', file: 'Dosya', builtin: 'Dahili', custom: 'Elle' };
+    host.innerHTML = '';
+    if (!state.sources.length) host.appendChild(el('p', 'muted', 'Kaynak yok. "Ekle" sekmesinden ekleyin.'));
+    state.sources.forEach(function (s) {
+      var c = el('div', 'card');
+      var t = el('div', 'name', s.name); t.style.fontWeight = '600';
+      t.appendChild(el('span', 'badge', kinds[s.kind] || s.kind));
+      if (!s.enabled) t.appendChild(el('span', 'badge', 'kapalı'));
+      c.appendChild(t);
+      if (s.url) c.appendChild(el('div', 'sub', s.url.replace(/(username|password|user|pass)=([^&]+)/gi, '$1=•••')));
+      c.appendChild(el('div', 'muted', s.refreshing ? 'Yükleniyor…' : s.channelCount + ' kanal • güncelleme: ' + when(s.lastUpdated)));
+      if (s.error) c.appendChild(el('div', 'err', s.error));
+      var b = el('div', 'row-btns');
+      b.appendChild(btn('Yenile', 'ghost small', function () { toast('Yenileniyor: ' + s.name); run(this, 'source.refresh', { id: s.id }); }));
+      b.appendChild(btn(s.enabled ? 'Kapat' : 'Aç', 'ghost small', function () { run(this, 'source.enable', { id: s.id, enabled: !s.enabled }); }));
+      if (s.kind === 'url' || s.kind === 'file') b.appendChild(btn('Düzenle', 'ghost small', function () { editSource(s); }));
+      b.appendChild(btn('Sil', 'danger small', function () {
+        if (confirm(s.name + ' ve kanalları TV\'den silinsin mi?')) run(this, 'source.delete', { id: s.id });
+      }));
+      c.appendChild(b);
+      host.appendChild(c);
+    });
+  }
+
+  function editSource(s) {
+    openSheet(function (sh) {
+      sh.appendChild(el('h3', null, 'Kaynağı düzenle'));
+      var name = field(sh, 'Ad', s.name);
+      var url = s.kind === 'url' ? field(sh, 'Adres', s.url, 'url') : null;
+      var epg = field(sh, 'EPG adresi', s.epgUrl, 'url');
+      var b = el('div', 'row-btns');
+      b.appendChild(btn('Kaydet', '', function () {
+        var args = { id: s.id, name: name.value.trim(), epgUrl: epg.value.trim() };
+        if (url) args.url = url.value.trim();
+        run(this, 'source.update', args, closeSheet);
+      }));
+      b.appendChild(btn('Kapat', 'ghost', closeSheet));
+      sh.appendChild(b);
+    });
+  }
+
+  $('resetOrder').onclick = function () {
+    if (confirm('Kanal sırası listelerdeki sıraya dönsün mü?')) run(this, 'order.reset', {});
+  };
+
+  // ---------------------------------------------------------------- add
+  function readFile(input, max) {
+    return new Promise(function (resolve, reject) {
+      var f = input.files && input.files[0];
+      if (!f) { resolve(null); return; }
+      if (f.size > max) { reject(new Error('Dosya çok büyük (en fazla ' + Math.round(max / 1048576) + ' MB).')); return; }
+      var r = new FileReader();
+      r.onload = function () { resolve({ name: f.name, text: String(r.result) }); };
+      r.onerror = function () { reject(new Error('Dosya okunamadı.')); };
+      r.readAsText(f, 'utf-8');
+    });
+  }
+  $('aBtn').onclick = async function () {
+    var me = this, url = $('aUrl').value.trim(), file;
+    try { file = await readFile($('aFile'), 8 * 1048576); } catch (e) { toast(e.message, true); return; }
+    if (!file && !/^https?:\/\//i.test(url)) { toast('M3U adresini girin veya bir dosya seçin.', true); return; }
+    var args = { name: $('aName').value.trim() || (file ? file.name.replace(/\.[^.]+$/, '') : ''), epgUrl: $('aEpg').value.trim() };
+    if (file) args.m3u = file.text; else args.url = url;
+    toast('TV listeyi yüklüyor…');
+    var r = await run(me, 'source.add', args);
+    if (r) { $('aName').value = ''; $('aUrl').value = ''; $('aFile').value = ''; $('aEpg').value = ''; }
+  };
+  $('cBtn').onclick = async function () {
+    var args = { name: $('cName').value.trim(), url: $('cUrl').value.trim(), group: $('cGroup').value.trim(), logo: $('cLogo').value.trim() };
+    if (!args.name || !/^(https?|rtsp|udp):\/\//i.test(args.url)) { toast('Kanal adı ve geçerli bir yayın adresi girin.', true); return; }
+    var r = await run(this, 'channel.add', args);
+    if (r) { $('cName').value = ''; $('cUrl').value = ''; $('cLogo').value = ''; }
+  };
+
+  // ---------------------------------------------------------------- sync
+  var other = null; // { base, tv, info }
+  function baseOf(addr, port) {
+    addr = addr.trim().replace(/\/+$/, '');
+    if (!/^https?:\/\//i.test(addr)) addr = 'http://' + addr;
+    var u = new URL(addr);
+    if (!u.port && port) u.port = port;
+    return u.origin;
+  }
+  async function probe(addr) {
+    var tries = /:\d+$/.test(addr.replace(/\/+$/, '')) || /^https?:\/\/[^/]+:\d+/i.test(addr) ? [null] : [8686, 8787], i, base, info;
+    for (i = 0; i < tries.length; i++) {
+      base = baseOf(addr, tries[i]);
+      try { info = await call(base, 'GET', '/api/info'); if (info.app === 'NovaTV') return { base: base, info: info }; } catch (e) { /* try next */ }
+    }
+    throw new Error('Bu adreste NovaTV bulunamadı (8686 / 8787). Diğer TV\'de "Telefondan yönet" ekranı açık mı?');
+  }
+  $('sFind').onclick = async function () {
+    var me = this; me.disabled = true; $('sMsg').textContent = 'Aranıyor…'; $('sStep2').classList.add('hide');
+    try {
+      other = await probe($('sAddr').value);
+      var sel = $('sTv'); sel.innerHTML = ''; sel.classList.add('hide');
+      if (other.info.platform === 'proxy') {
+        var tvs = (await call(other.base, 'GET', '/api/manage/tvs')).tvs || [];
+        if (!tvs.length) throw new Error('Bu proxy\'ye bağlı bir LG TV yok. LG TV\'de Ayarlar → Uzaktan yönetim\'i açın.');
+        tvs.forEach(function (t) { var o = el('option', null, t.name + (t.online ? '' : ' (çevrimdışı)')); o.value = t.id; sel.appendChild(o); });
+        sel.classList.remove('hide');
+      }
+      $('sMsg').textContent = 'Bulundu: ' + (other.info.name || other.base) + '. Şimdi o TV\'deki PIN\'i girin.';
+      $('sStep2').classList.remove('hide');
+    } catch (e) { $('sMsg').textContent = e.message; }
+    me.disabled = false;
+  };
+  $('sGo').onclick = async function () {
+    var me = this, pin = $('sPin').value.trim(), tv = other && other.info.platform === 'proxy' ? $('sTv').value : '';
+    if (!other) return;
+    if (!/^\d{4}$/.test(pin)) { $('sMsg').textContent = '4 haneli PIN\'i girin.'; return; }
+    me.disabled = true; $('sMsg').textContent = 'Liste alınıyor…';
+    try {
+      var p = await call(other.base, 'POST', '/api/manage/pair', tv ? { pin: pin, name: 'Eşitleme', tv: tv } : { pin: pin, name: 'Eşitleme' });
+      var q = { token: p.token }; if (tv) q.tv = tv;
+      var cfg = (await call(other.base, 'GET', '/api/manage/export', null, q)).config;
+      await importConfig(cfg, me);
+    } catch (e) { $('sMsg').textContent = e.message; }
+    me.disabled = false;
+  };
+  async function importConfig(cfg, button) {
+    var n = (cfg.sources || []).length, msg = (cfg.device ? cfg.device + ': ' : '') + n + ' kaynak, ' + (cfg.custom || []).length + ' kendi kanalı, ' +
+      (cfg.favorites || []).length + ' favori, ' + (cfg.hidden || []).length + ' gizli kanal. Bu TV\'ye eklensin mi?';
+    if (!confirm(msg)) { $('sMsg').textContent = 'İptal edildi.'; return; }
+    $('sMsg').textContent = 'TV listeleri yüklüyor; büyük listelerde birkaç dakika sürebilir…';
+    var r = await run(button, 'config.import', { config: cfg });
+    $('sMsg').textContent = r ? r.message : 'Eşitleme yapılamadı.';
+  }
+  $('exportBtn').onclick = async function () {
+    try {
+      var cfg = (await api.exportCfg()).config;
+      var blob = new Blob([JSON.stringify(cfg, null, 1)], { type: 'application/json' });
+      var a = el('a'); a.href = URL.createObjectURL(blob);
+      a.download = 'novatv-' + String(cfg.device || 'tv').replace(/[^\w-]+/g, '_') + '.json';
+      document.body.appendChild(a); a.click(); a.remove();
+    } catch (e) { if (e.status === 401) forget(); else toast(e.message, true); }
+  };
+  $('importFile').onchange = async function () {
+    var f;
+    try { f = await readFile(this, 4 * 1048576); } catch (e) { toast(e.message, true); return; }
+    if (!f) return;
+    var cfg;
+    try { cfg = JSON.parse(f.text); } catch (e) { toast('Dosya okunamadı.', true); return; }
+    await importConfig(cfg, null);
+    this.value = '';
+  };
+
+  // ---------------------------------------------------------------- start
+  async function load() {
+    try {
+      state = (await api.state()).state;
+      show('main'); render();
+    } catch (e) {
+      if (e.status === 401) { token = ''; localStorage.removeItem(TOKEN_KEY); show('pair'); }
+      else { $('dev').textContent = e.message; show('pair'); $('pairErr').textContent = e.message; }
+    }
+  }
+  async function start() {
+    var hashPin = (location.hash.match(/p=(\d{4})/) || [])[1];
+    if (hashPin) history.replaceState(null, '', location.pathname + location.search);
+    try {
+      var info = await call('', 'GET', '/api/info');
+      if (info.platform === 'proxy') {
+        if (!TV) {
+          var tvs = (await call('', 'GET', '/api/manage/tvs')).tvs || [];
+          if (tvs.length === 1) { location.replace('?tv=' + encodeURIComponent(tvs[0].id) + location.hash); return; }
+          var sel = $('tvPick'); sel.innerHTML = '';
+          tvs.forEach(function (t) { var o = el('option', null, t.name); o.value = t.id; sel.appendChild(o); });
+          sel.classList.toggle('hide', !tvs.length);
+          sel.onchange = function () { location.replace('?tv=' + encodeURIComponent(sel.value)); };
+          $('dev').textContent = tvs.length ? 'Yönetilecek LG TV\'yi seçin' : 'Bu proxy\'ye bağlı LG TV yok';
+          $('pairHint').textContent = tvs.length ? 'TV\'yi seçin.' : 'LG TV\'de NovaTV → Ayarlar → Uzaktan yönetim\'i açın; TV birkaç saniye içinde burada görünür.';
+          show('pair'); $('pinIn').classList.add('hide'); $('pairBtn').classList.add('hide');
+          return;
+        }
+        $('pairHint').innerHTML = 'LG TV\'de <b>NovaTV → Ayarlar → Telefondan yönet</b> ekranını açın ve orada görünen PIN\'i girin.';
+      }
+      $('dev').textContent = info.name || 'NovaTV';
+    } catch (e) { $('dev').textContent = e.message; }
+    if (hashPin && !token) { $('pinIn').value = hashPin; await pair(hashPin); return; }
+    if (!token) { show('pair'); return; }
+    await load();
+  }
+  setInterval(function () { if (token && state && !document.hidden && $('sheet').style.display !== 'block') api.state().then(function (r) { state = r.state; render(); }).catch(function () {}); }, 15000);
+  start();
+}());
+</script>
+</body>
+</html>

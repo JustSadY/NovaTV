@@ -1,0 +1,29 @@
+# Build outputs: APK / IPK are published as GitHub Release assets, not committed
+build/
+dist/
+*.apk
+*.ipk
+
+# Android / Gradle (local machine state and secrets)
+.gradle/
+.kotlin/
+local.properties
+keystore.properties
+*.jks
+*.keystore
+captures/
+.externalNativeBuild/
+.cxx/
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc
+
+# Editors, OS, local tool settings
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+.claude/

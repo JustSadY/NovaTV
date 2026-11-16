@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/player_root"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/black"
+    android:keepScreenOn="true">
+
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/player_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusable="false"
+        android:focusableInTouchMode="false"
+        app:keep_content_on_player_reset="false"
+        app:resize_mode="fit"
+        app:show_buffering="never"
+        app:shutter_background_color="@color/black"
+        app:surface_type="surface_view"
+        app:use_controller="false" />
+
+    <ProgressBar
+        android:id="@+id/player_loading"
+        style="@android:style/Widget.Material.ProgressBar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/safe_v"
+        android:layout_marginEnd="@dimen/safe_h"
+        android:indeterminateTint="@color/accent_light"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/player_error"
+        layout="@layout/view_player_error"
+        android:layout_width="520dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/info_banner"
+        layout="@layout/view_info_banner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/channel_panel"
+        layout="@layout/view_channel_panel"
+        android:layout_width="@dimen/panel_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:visibility="gone" />
+
+    <include
+        android:id="@+id/quick_menu"
+        layout="@layout/view_quick_menu"
+        android:layout_width="@dimen/menu_width"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/number_entry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="@dimen/safe_v"
+        android:layout_marginEnd="110dp"
+        android:background="@drawable/bg_number"
+        android:fontFamily="sans-serif-medium"
+        android:minWidth="120dp"
+        android:gravity="center"
+        android:paddingStart="24dp"
+        android:paddingTop="8dp"
+        android:paddingEnd="24dp"
+        android:paddingBottom="8dp"
+        android:textColor="@color/text_primary"
+        android:textSize="48sp"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/osd"
+        style="@style/Osd" />
+</FrameLayout>
